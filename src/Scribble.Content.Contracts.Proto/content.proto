@@ -1,0 +1,137 @@
+syntax = "proto3";
+
+option csharp_namespace = "Scribble.Content.Contracts.Proto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/any.proto";
+
+package Scribble.Content.Contracts.Proto;
+
+service BlogProtoService {
+  rpc GetAll (google.protobuf.Empty) returns (Collection);
+  rpc GetById (GetByIdRequest) returns (BlogModel);
+  rpc GetPaged (GetPagedRequest) returns (PagedCollection);
+  
+  rpc Create (BlogModel) returns (google.protobuf.Empty);
+  rpc Update (BlogModel) returns (google.protobuf.Empty);
+  rpc Delete (BlogModel) returns (google.protobuf.Empty);
+
+  rpc GetPagedByAuthorId (GetPagedByIdRequest) returns (PagedCollection);
+}
+
+service ArticleProtoService {
+  rpc GetAll (google.protobuf.Empty) returns (Collection);
+  rpc GetById (GetByIdRequest) returns (ArticleModel);
+  rpc GetPaged (GetPagedRequest) returns (PagedCollection);
+  
+  rpc Create (ArticleModel) returns (google.protobuf.Empty);
+  rpc Update (ArticleModel) returns (google.protobuf.Empty);
+  rpc Delete (ArticleModel) returns (google.protobuf.Empty);
+
+  rpc GetPagedByBlogId (GetPagedByIdRequest) returns (PagedCollection);
+}
+
+service TagProtoService {
+  rpc GetAllByArticleId (GetByIdRequest) returns (Collection);
+  rpc GetAllByAuthorId (GetByIdRequest) returns (Collection);
+  
+  rpc Insert (TagModel) returns (google.protobuf.Empty);
+  rpc Update (TagModel) returns (google.protobuf.Empty);
+  rpc Remove (TagModel) returns (google.protobuf.Empty);
+}
+
+service CategoryProtoService {
+  rpc GetAll (google.protobuf.Empty) returns (Collection);
+  rpc GetAllByArticleId (GetByIdRequest) returns (Collection);
+  
+  rpc Insert (CategoryModel) returns (google.protobuf.Empty);
+  rpc Update (CategoryModel) returns (google.protobuf.Empty);
+  rpc Remove (CategoryModel) returns (google.protobuf.Empty);
+}
+
+service CommentProtoService {
+  rpc GetAllByArticleId (GetByIdRequest) returns (Collection);
+  rpc GetPagedByArticleId (GetPagedByIdRequest) returns (PagedCollection);
+  
+  rpc Insert (CommentModel) returns (google.protobuf.Empty);
+  rpc Update (CommentModel) returns (google.protobuf.Empty);
+  rpc Remove (CommentModel) returns (google.protobuf.Empty);
+}
+
+message GetByIdRequest {
+  string Id = 1;
+}
+
+message GetPagedRequest {
+  int32 PageIndex = 1;
+  int32 PageSize = 2;
+  int32 IndexFrom = 3;
+}
+
+message GetPagedByIdRequest {
+  string Id = 1;
+  int32 PageIndex = 2;
+  int32 PageSize = 3;
+  int32 IndexFrom = 4;
+}
+
+message BlogModel {
+  string Id = 1;
+  string Name = 2;
+  string Description = 3;
+  google.protobuf.Timestamp CreatedAt = 4;
+  google.protobuf.Timestamp UpdatedAt = 5;
+  string AuthorId = 6;
+  repeated ArticleModel Articles = 7;
+}
+
+message ArticleModel {
+  string Id = 1;
+  string Title = 2;
+  string Content = 3;
+  google.protobuf.Timestamp CreatedAt = 4;
+  google.protobuf.Timestamp PublishedAt = 5;
+  google.protobuf.Timestamp UpdatedAt = 6;
+  bool IsPublished = 7;
+  BlogModel Blog = 8;
+  repeated TagModel Tags = 9;
+  repeated CategoryModel Categories = 10;
+  repeated CommentModel Comments = 11;
+}
+
+message TagModel {
+  string Id = 1;
+  string Name = 2;
+  string AuthorId = 3;
+  repeated ArticleModel Articles = 4;
+}
+
+message CategoryModel {
+  string Id = 1;
+  string Name = 2;
+  repeated ArticleModel Articles = 3;
+}
+
+message CommentModel {
+  string Id = 1;
+  string Text = 2;
+  google.protobuf.Timestamp CreatedAt = 3;
+  google.protobuf.Timestamp PublishedAt = 4;
+  google.protobuf.Timestamp UpdatedAt = 5;
+  string AuthorId = 6;
+  ArticleModel Article = 7;
+}
+
+message Collection {
+  repeated google.protobuf.Any Models = 1;
+}
+
+message PagedCollection {
+  int32 PageIndex = 1;
+  int32 PageSize = 2;
+  int32 IndexFrom = 3;
+  int32 TotalCount = 4;
+  int32 TotalPages = 5;
+  repeated google.protobuf.Any Models = 6;
+}
