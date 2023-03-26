@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scribble.Content.Models;
 using Scribble.Content.Web.Controllers.Base;
+using Scribble.Content.Web.Definitions.Documentation;
 using Scribble.Content.Web.Features.Queries;
 using Scribble.Content.Web.Models;
+using Scribble.Content.Web.Models.Entities;
 using Scribble.Responses;
 
 namespace Scribble.Content.Web.Controllers;
@@ -21,7 +23,7 @@ public class CategoriesWritableController : UnitOfWorkWritableController<Categor
 
     [HttpGet("article/{id:guid}/all"), AllowAnonymous]
     [ProducesResponseType(typeof(ApiValidationFailureResponse<ValidationFailure>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ApiResultResponse<ICollection<CategoryEntity>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResultResponse<IEnumerable<CategoryEntity>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IApiResponse>> GetAllCategoriesByBlogIdAsync(Guid id)
     {
         try
@@ -32,8 +34,8 @@ public class CategoriesWritableController : UnitOfWorkWritableController<Categor
                 .ConfigureAwait(false);
 
             return Ok(!categories.Any()
-                ? new ApiResultResponse<ICollection<CategoryEntity>>(categories, ApiResponseDefaultMessages.NoEntityWasFound)
-                : new ApiResultResponse<ICollection<CategoryEntity>>(categories,
+                ? new ApiResultResponse<IEnumerable<CategoryEntity>>(categories, ApiResponseDefaultMessages.NoEntityWasFound)
+                : new ApiResultResponse<IEnumerable<CategoryEntity>>(categories,
                     ApiResponseDefaultMessages.ResponseIsSuccessful));
         }
         catch (ValidationException exp)

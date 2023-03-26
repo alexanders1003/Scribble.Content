@@ -1,13 +1,12 @@
-﻿using AutoWrapper;
-using Calabonga.AspNetCore.AppDefinitions;
+﻿using Calabonga.AspNetCore.AppDefinitions;
 using Microsoft.AspNetCore.Mvc;
-using Scribble.Content.Web.Controllers.Base;
-using Scribble.Content.Web.Definitions.Swagger.Conventions;
+using Microsoft.AspNetCore.OData;
+using Scribble.Content.Web.Definitions.Documentation.Conventions;
 using Serilog;
 
 namespace Scribble.Content.Web.Definitions;
 
-public class BaseDefinition : AppDefinition
+public class DefinitionBase : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, WebApplicationBuilder builder)
     {
@@ -18,6 +17,8 @@ public class BaseDefinition : AppDefinition
 
         services.AddResponseCaching();
         services.AddMemoryCache();
+
+        services.AddAutoMapper(typeof(Program).Assembly);
         
         services.Configure<ApiBehaviorOptions>(options =>
         {
@@ -35,6 +36,8 @@ public class BaseDefinition : AppDefinition
             loggingBuilder.ClearProviders();
             loggingBuilder.AddSerilog(dispose: true);
         });
+        
+        services.AddODataQueryFilter();
     }
 
     public override void ConfigureApplication(WebApplication app)
@@ -43,17 +46,9 @@ public class BaseDefinition : AppDefinition
         {
             app.UseDeveloperExceptionPage();
         }
-        
+
         app.UseHttpsRedirection();
         app.UseResponseCaching();
         app.UseHsts();
-
-        app.UseAutoWrapper(new AutoWrapperOptions
-        {
-            ShowApiVersion = true,
-            ShowStatusCode = true,
-            ShowIsErrorFlagForSuccessfulResponse = false,
-            ShouldLogRequestData = false
-        });
     }
 }

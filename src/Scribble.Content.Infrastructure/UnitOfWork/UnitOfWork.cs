@@ -14,7 +14,7 @@ public sealed class UnitOfWork<TDbContext> : IUnitOfWork<TDbContext>
 
     public TDbContext DbContext { get; }
 
-    public IEntityRepository<TEntity, TKey> CreateRepository<TEntity, TKey>()
+    public IEntityRepository<TEntity, TKey> GetRepository<TEntity, TKey>()
         where TEntity : class
         where TKey : IEquatable<TKey>
     {

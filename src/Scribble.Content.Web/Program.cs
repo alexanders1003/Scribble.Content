@@ -18,6 +18,10 @@ app.UseDefinitions();
 try
 {
     Log.Information("Starting web host");
+    foreach (var url in app.Urls)
+    {
+        Log.Information($"Now listening {url}");
+    }
 
     using var scope = app.Services.CreateScope();
 

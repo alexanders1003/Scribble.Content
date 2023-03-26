@@ -2,10 +2,10 @@
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Scribble.Content.Infrastructure.UnitOfWork.Pagination;
+using Scribble.Content.Web.Definitions.Documentation;
+using Scribble.Content.Web.Definitions.Documentation.Conventions;
 using Scribble.Content.Web.Features.Commands;
 using Scribble.Content.Web.Features.Queries;
 using Scribble.Content.Web.Models.Base;
@@ -14,85 +14,16 @@ using Scribble.Shared.Models;
 
 namespace Scribble.Content.Web.Controllers.Base;
 
-[Consumes(MediaTypeNames.Application.Json)]
-[Produces(MediaTypeNames.Application.Json)]
-public abstract class UnitOfWorkReadOnlyController<TEntity, TKey> : ControllerBase
+public class UnitOfWorkWritableController<TEntity, TKey, TViewModel> : UnitOfWorkReadOnlyController<TEntity, TKey>
     where TEntity : Entity<TKey> where TKey : IEquatable<TKey>
-{
-    protected readonly IMediator Mediator;
-    protected UnitOfWorkReadOnlyController(IMediator mediator) 
-        => Mediator = mediator;
-    
-    [HttpGet("all"), AllowAnonymous]
-    [ProducesResponseType(typeof(ApiResultResponse<ICollection<EntityConventionStub>>),StatusCodes.Status200OK)]
-    public virtual async Task<ActionResult<IApiResponse>> GetAllEntitiesAsync()
-    {
-        var entities = await Mediator.Send(new GetAllEntitiesQuery<TEntity, TKey>(), HttpContext.RequestAborted)
-            .ConfigureAwait(false);
-
-        return Ok(!entities.Any()
-            ? new ApiResultResponse<ICollection<TEntity>>(entities, ApiResponseDefaultMessages.NoEntityWasFound)
-            : new ApiResultResponse<ICollection<TEntity>>(entities,
-                ApiResponseDefaultMessages.ResponseIsSuccessful));
-    }
-
-    [HttpGet("{id:required}"), AllowAnonymous]
-    [ProducesResponseType(typeof(ApiValidationFailureResponse<ValidationFailure>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ApiResultResponse<EntityConventionStub>), StatusCodes.Status200OK)]
-    public virtual async Task<ActionResult<IApiResponse>> GetEntityByIdAsync(TKey id)
-    {
-        try
-        {
-            var entity = await Mediator.Send(new GetEntityByIdQuery<TEntity, TKey>(id), HttpContext.RequestAborted)
-                .ConfigureAwait(false);
-
-            return Ok(entity is null  
-                ? new ApiResultResponse<TEntity?>(entity, ApiResponseDefaultMessages.EntityWasNotFound) 
-                : new ApiResultResponse<TEntity?>(entity, 
-                ApiResponseDefaultMessages.ResponseIsSuccessful));
-        }
-        catch (ValidationException exp)
-        {
-            return BadRequest(new ApiValidationFailureResponse<ValidationFailure>(exp.Errors, ApiResponseDefaultMessages.ValidationErrors));
-        }
-    }
-    
-    [HttpGet("paged"), AllowAnonymous]
-    [ProducesResponseType(typeof(ApiValidationFailureResponse<ValidationFailure>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ApiResultResponse<IPagedCollection<EntityConventionStub>>), StatusCodes.Status200OK)]
-    public virtual async Task<ActionResult<IApiResponse>> GetPagedEntitiesAsync([FromQuery] PaginationQueryParameters parameters)
-    {
-        try
-        {
-            var entities = await Mediator.Send(new GetEntityPagedQuery<TEntity, TKey>(parameters), HttpContext.RequestAborted)
-                .ConfigureAwait(false);
-            
-            return Ok(!entities.Entities.Any() 
-                ? new ApiResultResponse<IPagedCollection<TEntity>>(entities, ApiResponseDefaultMessages.NoEntityWasFound) 
-                : new ApiResultResponse<IPagedCollection<TEntity>>(entities, 
-                    ApiResponseDefaultMessages.ResponseIsSuccessful));
-        }
-        catch (ValidationException exp)
-        {
-            return BadRequest(new ApiValidationFailureResponse<ValidationFailure>(exp.Errors, ApiResponseDefaultMessages.ValidationErrors));
-        }
-    }
-}
-
-[Consumes(MediaTypeNames.Application.Json)]
-[Produces(MediaTypeNames.Application.Json)]
-public abstract class UnitOfWorkController<TEntity, TKey, TViewModel> : ControllerBase 
-    where TEntity : Entity<TKey> 
-    where TKey : IEquatable<TKey>
     where TViewModel : ViewModel
 {
-    protected readonly IMediator Mediator;
-    protected UnitOfWorkController(IMediator mediator) 
-        => Mediator = mediator;
+    public UnitOfWorkWritableController(IMediator mediator) 
+        : base(mediator) { }
 
     [HttpPost]
     [ProducesResponseType(typeof(ApiValidationFailureResponse<ValidationFailure>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ApiResultResponse<EntityConventionStub>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiResultResponse<ResponseEntityConventionStub>), StatusCodes.Status201Created)]
     public virtual async Task<ActionResult<IApiResponse>> CreateEntityAsync([FromBody] TViewModel viewModel)
     {
         try

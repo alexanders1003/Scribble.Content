@@ -13,14 +13,12 @@ public class AutoMoqFixtureAttribute : AutoDataAttribute
             var fixture = new Fixture()
                 .Customize(new AutoMoqCustomization());
             
-            fixture.Register(() => new BlogEntity
-            {
-                Name = null!,
-                Description = "Default Description",
-                AuthorId = Guid.NewGuid(),
-                Articles = new List<ArticleEntity>()
-            });
+            fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
+            fixture.Customize<BlogEntity>(composer => composer.WithAutoProperties());
+
+            
             return fixture;
         })
     {

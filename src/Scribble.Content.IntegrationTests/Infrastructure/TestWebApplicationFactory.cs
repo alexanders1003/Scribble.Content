@@ -15,6 +15,8 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment(HostingEnvironmentDefaults.TestingEnvironment);
+
+        builder.UseUrls("https://localhost:5001");
         
         builder.ConfigureServices(services =>
         {
@@ -28,7 +30,7 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseInMemoryDatabase("Scribble.Content.Tests.Unit.Integration.InMemory");
+                options.UseInMemoryDatabase("Scribble.Content.UnitTests.Integration.InMemory");
             });
         });
     }

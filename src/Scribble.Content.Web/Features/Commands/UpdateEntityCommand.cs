@@ -1,98 +1,66 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Scribble.Content.Infrastructure.Contexts;
+using Scribble.Content.Infrastructure.Exceptions;
 using Scribble.Content.Infrastructure.UnitOfWork;
-using Scribble.Content.Models;
+using Scribble.Content.Web.Models.Base;
+using Scribble.Shared.Models;
 
 namespace Scribble.Content.Web.Features.Commands;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public class UpdateEntityCommand<TEntity> : IRequest
-    where TEntity : class
+public class UpdateEntityCommand<TEntity, TKey, TViewModel> : IRequest 
+    where TEntity : Entity<TKey> where TKey : IEquatable<TKey>
+    where TViewModel : ViewModel
 {
-    public UpdateEntityCommand(TEntity entity) => Entity = entity;
-    public TEntity Entity { get; }
+    public UpdateEntityCommand(TKey key, TViewModel viewModel)
+    {
+        Key = key;
+        ViewModel = viewModel;
+    }
+    
+    public TKey Key { get; }
+    public TViewModel ViewModel { get; }
 }
 
-public class UpdateEntityCommandHandler<TEntity> : IRequestHandler<UpdateEntityCommand<TEntity>> 
-    where TEntity : class
+public class UpdateEntityCommandHandler<TEntity, TKey, TViewModel> : IRequestHandler<UpdateEntityCommand<TEntity, TKey, TViewModel>> 
+    where TEntity : Entity<TKey> where TKey : IEquatable<TKey>
+    where TViewModel : ViewModel
 {
+    private readonly ILogger<UpdateEntityCommandHandler<TEntity, TKey, TViewModel>> _logger;
     private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork;
+    private readonly IValidator<TViewModel> _validator;
+    private readonly IMapper _mapper;
 
-    public UpdateEntityCommandHandler(IUnitOfWork<ApplicationDbContext> unitOfWork) 
-        => _unitOfWork = unitOfWork;
-
-    public Task<Unit> Handle(UpdateEntityCommand<TEntity> request, CancellationToken cancellationToken)
+    public UpdateEntityCommandHandler(ILogger<UpdateEntityCommandHandler<TEntity, TKey, TViewModel>> logger, 
+        IUnitOfWork<ApplicationDbContext> unitOfWork, IValidator<TViewModel> validator, IMapper mapper)
     {
-        var repository = _unitOfWork.CreateRepository<TEntity, Guid>();
-
-        repository.Update(request.Entity);
-
-        return Task.FromResult(Unit.Value);
+        _logger = logger;
+        _unitOfWork = unitOfWork;
+        _validator = validator;
+        _mapper = mapper;
     }
-}
-
-public class UpdateBlogCommandValidator : AbstractValidator<UpdateEntityCommand<BlogEntity>>
-{
-    public UpdateBlogCommandValidator()
+    
+    public async Task<Unit> Handle(UpdateEntityCommand<TEntity, TKey, TViewModel> request, CancellationToken token)
     {
-        RuleFor(x => x.Entity)
-            .NotNull();
-        RuleFor(x => x.Entity.Name)
-            .NotNull().NotEmpty().MaximumLength(200);
-        RuleFor(x => x.Entity.Description)
-            .MaximumLength(1000);
-        RuleFor(x => x.Entity.AuthorId)
-            .NotEqual(Guid.Empty);
-    }
-}
+        var validationResult = await _validator.ValidateAsync(request.ViewModel, token)
+            .ConfigureAwait(false);
 
-public class UpdateArticleCommandValidator : AbstractValidator<UpdateEntityCommand<ArticleEntity>>
-{
-    public UpdateArticleCommandValidator()
-    {
-        RuleFor(x => x.Entity)
-            .NotNull();
-        RuleFor(x => x.Entity.Title)
-            .NotNull().NotEmpty().MaximumLength(500);
-        RuleFor(x => x.Entity.Categories.Count)
-            .GreaterThan(0);
-    }
-}
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
+        
+        var repository = _unitOfWork.GetRepository<TEntity, TKey>();
 
-public class UpdateTagCommandValidator : AbstractValidator<UpdateEntityCommand<TagEntity>>
-{
-    public UpdateTagCommandValidator()
-    {
-        RuleFor(x => x.Entity)
-            .NotNull();
-        RuleFor(x => x.Entity.Name)
-            .NotNull().NotEmpty().MaximumLength(100);
-        RuleFor(x => x.Entity.AuthorId)
-            .NotEqual(Guid.Empty);
-    }
-}
+        var entity = await repository.FindAsync(new[] { request.Key }, token);
 
-public class UpdateCategoryCommandValidator : AbstractValidator<UpdateEntityCommand<CategoryEntity>>
-{
-    public UpdateCategoryCommandValidator()
-    {
-        RuleFor(x => x.Entity)
-            .NotNull();
-        RuleFor(x => x.Entity.Name)
-            .NotNull().NotEmpty();
-    }
-}
+        if (entity is null)
+            throw new EntityNotFoundException(typeof(TEntity));
 
-public class UpdateCommentCommandValidator : AbstractValidator<UpdateEntityCommand<CommentEntity>>
-{
-    public UpdateCommentCommandValidator()
-    {
-        RuleFor(x => x.Entity)
-            .NotNull();
-        RuleFor(x => x.Entity.Text)
-            .NotNull().NotEmpty();
-        RuleFor(x => x.Entity.AuthorId)
-            .NotEqual(Guid.Empty);
+        var updatedEntity = _mapper.Map(request.ViewModel, entity);
+        
+        repository.Update(updatedEntity);
+
+        return Unit.Value;
     }
 }

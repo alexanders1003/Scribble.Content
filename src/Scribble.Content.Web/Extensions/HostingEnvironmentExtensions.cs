@@ -1,4 +1,6 @@
-﻿namespace Scribble.Content.Web.Extensions;
+﻿using System.Collections.ObjectModel;
+
+namespace Scribble.Content.Web.Extensions;
 
 public static class HostingEnvironmentExtensions
 {

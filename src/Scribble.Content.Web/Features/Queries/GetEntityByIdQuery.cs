@@ -6,26 +6,31 @@ using Scribble.Shared.Models;
 namespace Scribble.Content.Web.Features.Queries;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public class GetEntityByIdQuery<TEntity> : IRequest<TEntity?>
-    where TEntity : Entity
+public class GetEntityByIdQuery<TEntity, TKey> : IRequest<TEntity?>
+    where TEntity : Entity<TKey> where TKey : IEquatable<TKey>
 {
-    public GetEntityByIdQuery(Guid id) => Id = id;
-    public Guid Id { get; }
+    public GetEntityByIdQuery(TKey id) => Id = id;
+    public TKey Id { get; }
 }
 
-public class GetEntityByIdQueryHander<TEntity> : IRequestHandler<GetEntityByIdQuery<TEntity>, TEntity?> 
-    where TEntity : Entity
+public class GetEntityByIdQueryHandler<TEntity, TKey> : IRequestHandler<GetEntityByIdQuery<TEntity, TKey>, TEntity?> 
+    where TEntity : Entity<TKey> where TKey : IEquatable<TKey>
 {
+    private readonly ILogger<GetEntityByIdQueryHandler<TEntity, TKey>> _logger;
     private readonly IUnitOfWork<ApplicationDbContext> _context;
 
-    public GetEntityByIdQueryHander(IUnitOfWork<ApplicationDbContext> context) 
-        => _context = context;
-    
-    public async Task<TEntity?> Handle(GetEntityByIdQuery<TEntity> request, CancellationToken token)
+    public GetEntityByIdQueryHandler(ILogger<GetEntityByIdQueryHandler<TEntity, TKey>> logger, 
+        IUnitOfWork<ApplicationDbContext> context)
     {
-        var repository = _context.CreateRepository<TEntity, Guid>();
+        _logger = logger;
+        _context = context;
+    }
 
-        return await repository.GetFirstOrDefaultAsync(x => x.Id == request.Id, token: token)
+    public async Task<TEntity?> Handle(GetEntityByIdQuery<TEntity, TKey> request, CancellationToken token)
+    {
+        var repository = _context.GetRepository<TEntity, TKey>();
+
+        return await repository.GetFirstOrDefaultAsync(x => x.Id.Equals(request.Id), token: token)
             .ConfigureAwait(false);
     }
 }

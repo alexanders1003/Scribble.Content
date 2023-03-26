@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 
-namespace Scribble.Content.Web.Definitions.Mediater.Behaviors;
+namespace Scribble.Content.Web.Definitions.Mediator.Behaviors;
 
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>

@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Scribble.Content.Infrastructure.UnitOfWork.Pagination;
 using Scribble.Content.Models;
 using Scribble.Content.Web.Controllers.Base;
+using Scribble.Content.Web.Definitions.Documentation;
 using Scribble.Content.Web.Features.Queries;
 using Scribble.Content.Web.Models;
+using Scribble.Content.Web.Models.Entities;
 using Scribble.Responses;
 
 namespace Scribble.Content.Web.Controllers;
@@ -41,4 +43,11 @@ public class BlogsWritableController : UnitOfWorkWritableController<BlogEntity, 
             return new ApiValidationFailureResponse<ValidationFailure>(exp.Errors, ApiResponseDefaultMessages.ValidationErrors);
         }
     }
+
+    // [HttpGet("{blogKey:guid}/followers/count")]
+    // public async Task<ActionResult<IApiResponse>> GetFollowersCountAsync([FromRoute] Guid blogKey)
+    // {
+    //     var followersCount = await Mediator.Send(new GetFollowersCountQuery(blogKey), HttpContext.RequestAborted)
+    //         .ConfigureAwait(false)
+    // }
 }

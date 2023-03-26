@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Scribble.Content.Web.Definitions.Identity;
+namespace Scribble.Content.Web.Definitions.Authorization;
 
-public class IdentityDefinition : AppDefinition
+public class AuthorizationDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, WebApplicationBuilder builder)
     {

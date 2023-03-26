@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Linq.Expressions;
+using MediatR;
 using Scribble.Content.Infrastructure.Contexts;
 using Scribble.Content.Infrastructure.UnitOfWork;
 using Scribble.Shared.Models;
@@ -6,22 +7,31 @@ using Scribble.Shared.Models;
 namespace Scribble.Content.Web.Features.Queries;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public class GetAllEntitiesQuery<TEntity> : IRequest<ICollection<TEntity>>
-    where TEntity : Entity { }
-
-public class GetAllEntitiesQueryHandler<TEntity> : IRequestHandler<GetAllEntitiesQuery<TEntity>, ICollection<TEntity>>
-    where TEntity : Entity
+public class GetAllEntitiesQuery<TEntity, TKey> : IRequest<IEnumerable<TEntity>>
+    where TEntity : Entity<TKey> where TKey : IEquatable<TKey>
 {
+    public GetAllEntitiesQuery(Expression<Func<TEntity, bool>>? predicate = default) => Predicate = predicate;
+    public Expression<Func<TEntity, bool>>? Predicate { get; }
+}
+
+public class GetAllEntitiesQueryHandler<TEntity, TKey> : IRequestHandler<GetAllEntitiesQuery<TEntity, TKey>, IEnumerable<TEntity>>
+    where TEntity : Entity<TKey> where TKey : IEquatable<TKey>
+{
+    private readonly ILogger<GetAllEntitiesQueryHandler<TEntity, TKey>> _logger;
     private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork;
-
-    public GetAllEntitiesQueryHandler(IUnitOfWork<ApplicationDbContext> unitOfWork) 
-        => _unitOfWork = unitOfWork;
-
-    public async Task<ICollection<TEntity>> Handle(GetAllEntitiesQuery<TEntity> request, CancellationToken token)
+    
+    public GetAllEntitiesQueryHandler(ILogger<GetAllEntitiesQueryHandler<TEntity, TKey>> logger, 
+        IUnitOfWork<ApplicationDbContext> unitOfWork)
     {
-        var repository = _unitOfWork.CreateRepository<TEntity, Guid>();
+        _logger = logger;
+        _unitOfWork = unitOfWork;
+    }
 
-        return await repository.GetAllAsync(token: token)
+    public async Task<IEnumerable<TEntity>> Handle(GetAllEntitiesQuery<TEntity, TKey> request, CancellationToken token)
+    {
+        var repository = _unitOfWork.GetRepository<TEntity, Guid>();
+
+        return await repository.GetAllAsync(request.Predicate, token: token)
             .ConfigureAwait(false);
     }
 }

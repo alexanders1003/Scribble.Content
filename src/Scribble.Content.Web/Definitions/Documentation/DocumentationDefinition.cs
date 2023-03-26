@@ -4,7 +4,7 @@ using Microsoft.OpenApi.Models;
 
 namespace Scribble.Content.Web.Definitions.Documentation;
 
-public class SwaggerDefinition : AppDefinition
+public class DocumentationDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, WebApplicationBuilder builder)
     {

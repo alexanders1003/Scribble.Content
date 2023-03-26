@@ -3,22 +3,22 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Scribble.Content.Infrastructure.Contexts;
 using Scribble.Content.Infrastructure.UnitOfWork.Extensions;
-using Scribble.Content.Models.Extensions;
+using Scribble.Content.Web.Models.Validators.Extensions;
 
-namespace Scribble.Content.Web.Definitions.Data;
+namespace Scribble.Content.Web.Definitions.Infrastructure;
 
-public class DataDefinition : AppDefinition
+public class InfrastructureDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, WebApplicationBuilder builder)
     {
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
+            options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"));
         });
 
         services.AddUnitOfWork<ApplicationDbContext>();
 
         services.AddValidatorsFromAssembly(typeof(Program).Assembly);
-        services.AddEntityValidators();
+        services.AddViewModelValidators();
     }
 }

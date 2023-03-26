@@ -9,13 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.Models", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.Infrastructure", "Scribble.Content.Infrastructure\Scribble.Content.Infrastructure.csproj", "{F615ADD3-57F8-4085-8CFC-035EC7CEF711}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.Tests.Unit", "Scribble.Content.Tests.Unit\Scribble.Content.Tests.Unit.csproj", "{8E2A287B-2309-424C-8FCD-77E98A4B6BCD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.UnitTests", "Scribble.Content.UnitTests\Scribble.Content.UnitTests.csproj", "{8E2A287B-2309-424C-8FCD-77E98A4B6BCD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.Contracts.Events", "Scribble.Content.Contracts.Events\Scribble.Content.Contracts.Events.csproj", "{12BE148E-ED41-44CD-AF0B-66AE6EA7E841}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.Contracts.Proto", "Scribble.Content.Contracts.Proto\Scribble.Content.Contracts.Proto.csproj", "{E8721EAB-D7E6-41DC-8F02-8A8783FC1E1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.Tests.Integration", "Scribble.Content.Tests.Integration\Scribble.Content.Tests.Integration.csproj", "{DA3C4F2E-0537-4BDE-BB49-77D94831FD5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.IntegrationTests", "Scribble.Content.IntegrationTests\Scribble.Content.IntegrationTests.csproj", "{DA3C4F2E-0537-4BDE-BB49-77D94831FD5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

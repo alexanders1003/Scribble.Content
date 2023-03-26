@@ -2,8 +2,9 @@
 using AutoFixture.Kernel;
 using Microsoft.EntityFrameworkCore;
 using Scribble.Content.Infrastructure.Contexts;
+using Scribble.Content.Models;
 
-namespace Scribble.Content.Tests.Fixtures;
+namespace Scribble.Content.UnitTests.Fixtures;
 
 public class ApplicationDbContextCustomization : ICustomization
 {
@@ -20,7 +21,7 @@ public class ApplicationDbContextCustomization : ICustomization
         var dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
             .UseInMemoryDatabase("Scribble.Content.UnitTests")
             .Options;
-        var dbContext = new ApplicationDbContext(dbContextOptions);        
+        var dbContext = new ApplicationDbContext(dbContextOptions);
         return dbContext;
     }
 }

@@ -1,44 +1,45 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Scribble.Content.Infrastructure.Contexts;
+using Scribble.Content.Infrastructure.Exceptions;
 using Scribble.Content.Infrastructure.UnitOfWork;
 using Scribble.Shared.Models;
 
 namespace Scribble.Content.Web.Features.Commands;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public class RemoveEntityCommand<TEntity> : IRequest
-    where TEntity : Entity
+public class RemoveEntityCommand<TEntity, TKey> : IRequest
+    where TEntity : Entity<TKey> where TKey : IEquatable<TKey>
 {
-    public RemoveEntityCommand(TEntity entity) => Entity = entity;
-    public TEntity Entity { get; }
+    public RemoveEntityCommand(TKey key)
+        => Key = key;
+    public TKey Key { get; }
 }
 
-public class RemoveEntityCommandHandler<TEntity> : IRequestHandler<RemoveEntityCommand<TEntity>> 
-    where TEntity : Entity
+public class RemoveEntityCommandHandler<TEntity, TKey> : IRequestHandler<RemoveEntityCommand<TEntity, TKey>> 
+    where TEntity : Entity<TKey> where TKey : IEquatable<TKey>
 {
+    private readonly ILogger<RemoveEntityCommandHandler<TEntity, TKey>> _logger;
     private readonly IUnitOfWork<ApplicationDbContext> _context;
 
-    public RemoveEntityCommandHandler(IUnitOfWork<ApplicationDbContext> context) 
-        => _context = context;
-    
-    public Task<Unit> Handle(RemoveEntityCommand<TEntity> request, CancellationToken token)
+    public RemoveEntityCommandHandler(ILogger<RemoveEntityCommandHandler<TEntity, TKey>> logger, 
+        IUnitOfWork<ApplicationDbContext> context)
     {
-        var repository = _context.CreateRepository<TEntity, Guid>();
-
-        repository.Remove(request.Entity);
-
-        return Task.FromResult(Unit.Value);
+        _logger = logger;
+        _context = context;
     }
-}
 
-public class RemoveEntityCommandValidator : AbstractValidator<RemoveEntityCommand<Entity>>
-{
-    public RemoveEntityCommandValidator()
+    public async Task<Unit> Handle(RemoveEntityCommand<TEntity, TKey> request, CancellationToken token)
     {
-        RuleFor(x => x.Entity)
-            .NotNull();
-        RuleFor(x => x.Entity.Id)
-            .NotEqual(Guid.Empty);
+        var repository = _context.GetRepository<TEntity, TKey>();
+
+        var entity = await repository.FindAsync(new[] { request.Key }, token)
+            .ConfigureAwait(false);
+
+        if (entity is null)
+            throw new EntityNotFoundException(typeof(Entity));
+        
+        repository.Remove(entity);
+
+        return Unit.Value;
     }
 }

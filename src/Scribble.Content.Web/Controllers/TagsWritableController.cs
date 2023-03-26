@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scribble.Content.Models;
 using Scribble.Content.Web.Controllers.Base;
+using Scribble.Content.Web.Definitions.Documentation;
 using Scribble.Content.Web.Features.Queries;
 using Scribble.Content.Web.Models;
+using Scribble.Content.Web.Models.Entities;
 using Scribble.Responses;
 
 namespace Scribble.Content.Web.Controllers;
@@ -21,7 +23,7 @@ public class TagsWritableController : UnitOfWorkWritableController<TagEntity, Gu
     
     [HttpGet("post/{key:guid}/all"), AllowAnonymous]
     [ProducesResponseType(typeof(ApiValidationFailureResponse<ValidationFailure>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ICollection<TagEntity>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<TagEntity>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IApiResponse>> GetAllTagsByArticleIdAsync(Guid key)
     {
         try
@@ -31,8 +33,8 @@ public class TagsWritableController : UnitOfWorkWritableController<TagEntity, Gu
                 .ConfigureAwait(false);
 
             return Ok(!tags.Any()
-                ? new ApiResultResponse<ICollection<TagEntity>>(tags, ApiResponseDefaultMessages.NoEntityWasFound)
-                : new ApiResultResponse<ICollection<TagEntity>>(tags, ApiResponseDefaultMessages.ResponseIsSuccessful));
+                ? new ApiResultResponse<IEnumerable<TagEntity>>(tags, ApiResponseDefaultMessages.NoEntityWasFound)
+                : new ApiResultResponse<IEnumerable<TagEntity>>(tags, ApiResponseDefaultMessages.ResponseIsSuccessful));
         }
         catch (ValidationException exp)
         {

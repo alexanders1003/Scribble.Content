@@ -1,6 +1,7 @@
-﻿namespace Scribble.Content.Contracts.Events;
+﻿namespace Scribble.Content.Contracts.Events.Entities;
 
 public class PostPublishedContract
 {
-    public Guid Id { get; set; }
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
+    public Guid PostId { get; init; }
 }

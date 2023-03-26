@@ -4,7 +4,7 @@ namespace Scribble.Content.Infrastructure.UnitOfWork.Factories;
 
 public interface IEntityRepositoryFactory
 {
-    IEntityRepository<TEntity, TKey> CreateRepository<TEntity, TKey>()
+    IEntityRepository<TEntity, TKey> GetRepository<TEntity, TKey>()
         where TEntity : class
         where TKey : IEquatable<TKey>;
 }

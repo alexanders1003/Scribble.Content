@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Scribble.Content.Infrastructure.UnitOfWork.Pagination;
 using Scribble.Content.Models;
 using Scribble.Content.Web.Controllers.Base;
+using Scribble.Content.Web.Definitions.Documentation;
 using Scribble.Content.Web.Features.Queries;
 using Scribble.Content.Web.Models;
+using Scribble.Content.Web.Models.Entities;
 using Scribble.Responses;
 
 namespace Scribble.Content.Web.Controllers;
@@ -22,19 +24,19 @@ public class CommentsWritableController : UnitOfWorkWritableController<CommentEn
     
     [HttpGet("article/{id:guid}/all"), AllowAnonymous]
     [ProducesResponseType(typeof(ApiValidationFailureResponse<ValidationFailure>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ApiResultResponse<ICollection<CommentEntity>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResultResponse<IEnumerable<CommentEntity>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IApiResponse>> GetAllCommentsByPostIdAsync(Guid id)
     {
         try
         {
-            var comments = await Mediator.Send(new GetAllEntitiesQuery<CommentEntity, Guid>(x => x.Post.Id == id),
+            var comments = await Mediator.Send(new GetAllEntitiesQuery<CommentEntity, Guid>(x => x.PostEntity.Id == id),
                     HttpContext.RequestAborted)
                 .ConfigureAwait(false);
 
             return Ok(!comments.Any()
-                ? new ApiResultResponse<ICollection<CommentEntity>>(comments,
+                ? new ApiResultResponse<IEnumerable<CommentEntity>>(comments,
                     ApiResponseDefaultMessages.NoEntityWasFound)
-                : new ApiResultResponse<ICollection<CommentEntity>>(comments,
+                : new ApiResultResponse<IEnumerable<CommentEntity>>(comments,
                     ApiResponseDefaultMessages.ResponseIsSuccessful));
         }
         catch (ValidationException exp)
@@ -51,7 +53,7 @@ public class CommentsWritableController : UnitOfWorkWritableController<CommentEn
     {
         try
         {
-            var comments = await Mediator.Send(new GetEntityPagedQuery<CommentEntity, Guid>(parameters, x => x.Post.Id == id), 
+            var comments = await Mediator.Send(new GetEntityPagedQuery<CommentEntity, Guid>(parameters, x => x.PostEntity.Id == id), 
                     HttpContext.RequestAborted)
                 .ConfigureAwait(false);
                 

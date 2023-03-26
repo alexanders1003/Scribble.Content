@@ -1,6 +1,6 @@
-﻿namespace Scribble.Content.Web.Definitions.Identity;
+﻿namespace Scribble.Content.Web.Definitions.Authorization;
 
-public class IdentityConfiguration
+public class AuthorizationConfiguration
 {
     public string Authority { get; set; } = null!;
     public string Issuer { get; set; } = null!;

@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scribble.Content.Models;
 using Scribble.Content.Web.Controllers.Base;
+using Scribble.Content.Web.Definitions.Documentation;
 using Scribble.Content.Web.Models;
+using Scribble.Content.Web.Models.Entities;
 using Scribble.Responses;
 
 namespace Scribble.Content.Web.Controllers;
