@@ -1,3 +1,3 @@
-﻿namespace Scribble.Content.Web.Models.Base;
+﻿namespace Scribble.Content.Web.Models;
 
 public abstract class ViewModel { }

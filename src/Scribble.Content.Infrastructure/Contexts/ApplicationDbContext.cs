@@ -23,6 +23,8 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<TagEntity> Tags { get; set; } = null!;
 
+    public DbSet<ImageEntity> Images { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresExtension("uuid-ossp");

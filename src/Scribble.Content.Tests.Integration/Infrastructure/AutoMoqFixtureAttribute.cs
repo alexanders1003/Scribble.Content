@@ -3,7 +3,7 @@ using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
 using Scribble.Content.Models;
 
-namespace Scribble.Content.IntegrationTests.Infrastructure;
+namespace Scribble.Content.Tests.Integration.Infrastructure;
 
 public class AutoMoqFixtureAttribute : AutoDataAttribute
 {

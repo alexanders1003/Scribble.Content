@@ -3,7 +3,7 @@ using FluentValidation;
 using MediatR;
 using Scribble.Content.Infrastructure.Contexts;
 using Scribble.Content.Infrastructure.UnitOfWork;
-using Scribble.Content.Web.Models.Base;
+using Scribble.Content.Web.Models;
 using Scribble.Shared.Models;
 
 namespace Scribble.Content.Web.Features.Commands;

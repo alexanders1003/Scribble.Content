@@ -25,8 +25,6 @@ public class MessageBrokerDefinition : AppDefinition
 
             configurator.UsingRabbitMq((context, config) =>
             {
-                config.AutoStart = false;
-                
                 config.Host(brokerOptions.Host, brokerOptions.VirtualHost, hostConfigurator =>
                 {
                     hostConfigurator.Username(brokerOptions.Username);

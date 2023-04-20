@@ -1,9 +1,9 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
-using Scribble.Content.UnitTests.Fixtures;
+using Scribble.Content.Tests.Unit.Fixtures;
 
-namespace Scribble.Content.UnitTests;
+namespace Scribble.Content.Tests.Unit;
 
 public class AutoMoqFixtureAttribute : AutoDataAttribute
 {

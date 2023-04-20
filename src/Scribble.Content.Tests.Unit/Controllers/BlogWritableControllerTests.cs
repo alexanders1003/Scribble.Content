@@ -12,7 +12,7 @@ using Scribble.Content.Web.Models.Entities;
 using Scribble.Responses;
 using Xunit;
 
-namespace Scribble.Content.UnitTests.Controllers;
+namespace Scribble.Content.Tests.Unit.Controllers;
 
 public class BlogsWritableControllerTests : UnitOfWorkWritableControllerTests<BlogEntity, Guid, BlogViewModel>
 {

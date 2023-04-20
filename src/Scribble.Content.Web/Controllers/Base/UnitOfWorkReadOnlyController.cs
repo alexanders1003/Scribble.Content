@@ -5,7 +5,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
-using Microsoft.AspNetCore.OData.Results;
 using Scribble.Content.Infrastructure.UnitOfWork.Pagination;
 using Scribble.Content.Web.Definitions.Documentation;
 using Scribble.Content.Web.Definitions.Documentation.Conventions;
@@ -20,7 +19,7 @@ namespace Scribble.Content.Web.Controllers.Base;
 public class UnitOfWorkReadOnlyController<TEntity, TKey> : ControllerBase
     where TEntity : Entity<TKey> where TKey : IEquatable<TKey>
 {
-    public readonly IMediator Mediator;
+    protected readonly IMediator Mediator;
     public UnitOfWorkReadOnlyController(IMediator mediator) 
         => Mediator = mediator;
     
@@ -31,7 +30,7 @@ public class UnitOfWorkReadOnlyController<TEntity, TKey> : ControllerBase
         var entities = await Mediator.Send(new GetAllEntitiesQuery<TEntity, TKey>(), HttpContext.RequestAborted)
             .ConfigureAwait(false);
         
-        return Ok(!entities.Any()
+        return Ok(entities.Any()
             ? new ApiResultResponse<IEnumerable<TEntity>>(entities, ApiResponseDefaultMessages.NoEntityWasFound)
             : new ApiResultResponse<IEnumerable<TEntity>>(entities,
                 ApiResponseDefaultMessages.ResponseIsSuccessful));
@@ -40,7 +39,7 @@ public class UnitOfWorkReadOnlyController<TEntity, TKey> : ControllerBase
     [HttpGet("{id:required}"), AllowAnonymous]
     [ProducesResponseType(typeof(ApiValidationFailureResponse<ValidationFailure>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResultResponse<ResponseEntityConventionStub>), StatusCodes.Status200OK)]
-    public virtual async Task<ActionResult<IApiResponse>> GetEntityByIdAsync(TKey id)
+    public virtual async Task<ActionResult<IApiResponse>> GetEntityByIdAsync([FromRoute] TKey id)
     {
         try
         {

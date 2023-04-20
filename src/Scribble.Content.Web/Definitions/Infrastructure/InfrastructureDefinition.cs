@@ -21,4 +21,14 @@ public class InfrastructureDefinition : AppDefinition
         services.AddValidatorsFromAssembly(typeof(Program).Assembly);
         services.AddViewModelValidators();
     }
+
+    public override void ConfigureApplication(WebApplication app)
+    {
+        var scope = app.Services.CreateScope();
+        var services = scope.ServiceProvider;
+        
+        var context = services.GetRequiredService<ApplicationDbContext>();
+
+        context.Database.EnsureCreatedAsync().Wait();
+    }
 }

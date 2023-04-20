@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Scribble.Content.Infrastructure.Contexts;
 using Scribble.Content.Web.Extensions;
 
-namespace Scribble.Content.IntegrationTests.Infrastructure;
+namespace Scribble.Content.Tests.Integration.Infrastructure;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram>
@@ -30,7 +30,7 @@ public class TestWebApplicationFactory<TProgram> : WebApplicationFactory<TProgra
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseInMemoryDatabase("Scribble.Content.UnitTests.Integration.InMemory");
+                options.UseInMemoryDatabase("Scribble.Content.Tests.Unit.Integration.InMemory");
             });
         });
     }

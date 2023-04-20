@@ -9,13 +9,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.Models", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.Infrastructure", "Scribble.Content.Infrastructure\Scribble.Content.Infrastructure.csproj", "{F615ADD3-57F8-4085-8CFC-035EC7CEF711}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.UnitTests", "Scribble.Content.UnitTests\Scribble.Content.UnitTests.csproj", "{8E2A287B-2309-424C-8FCD-77E98A4B6BCD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.Tests.Unit", "Scribble.Content.Tests.Unit\Scribble.Content.Tests.Unit.csproj", "{8E2A287B-2309-424C-8FCD-77E98A4B6BCD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.Contracts.Events", "Scribble.Content.Contracts.Events\Scribble.Content.Contracts.Events.csproj", "{12BE148E-ED41-44CD-AF0B-66AE6EA7E841}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.Contracts.Proto", "Scribble.Content.Contracts.Proto\Scribble.Content.Contracts.Proto.csproj", "{E8721EAB-D7E6-41DC-8F02-8A8783FC1E1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.IntegrationTests", "Scribble.Content.IntegrationTests\Scribble.Content.IntegrationTests.csproj", "{DA3C4F2E-0537-4BDE-BB49-77D94831FD5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scribble.Content.Tests.Integration", "Scribble.Content.Tests.Integration\Scribble.Content.Tests.Integration.csproj", "{DA3C4F2E-0537-4BDE-BB49-77D94831FD5D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{620B3163-7E3D-4CB0-8C0A-9D3A05047267}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{9E81B7AD-A504-4A77-B170-BDF1479CBFBC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ctrs", "ctrs", "{424DAE6C-C5BB-48D1-8744-91F2CEFDEC4C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{36C37EFB-B518-4AF3-BD9E-99EEC3FA9932}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,5 +62,15 @@ Global
 		{DA3C4F2E-0537-4BDE-BB49-77D94831FD5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA3C4F2E-0537-4BDE-BB49-77D94831FD5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA3C4F2E-0537-4BDE-BB49-77D94831FD5D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8E2A287B-2309-424C-8FCD-77E98A4B6BCD} = {620B3163-7E3D-4CB0-8C0A-9D3A05047267}
+		{DA3C4F2E-0537-4BDE-BB49-77D94831FD5D} = {620B3163-7E3D-4CB0-8C0A-9D3A05047267}
+		{424DAE6C-C5BB-48D1-8744-91F2CEFDEC4C} = {9E81B7AD-A504-4A77-B170-BDF1479CBFBC}
+		{12BE148E-ED41-44CD-AF0B-66AE6EA7E841} = {424DAE6C-C5BB-48D1-8744-91F2CEFDEC4C}
+		{E8721EAB-D7E6-41DC-8F02-8A8783FC1E1E} = {424DAE6C-C5BB-48D1-8744-91F2CEFDEC4C}
+		{F615ADD3-57F8-4085-8CFC-035EC7CEF711} = {36C37EFB-B518-4AF3-BD9E-99EEC3FA9932}
+		{03ADB2A2-2910-40DB-B120-6793AEC07FF6} = {36C37EFB-B518-4AF3-BD9E-99EEC3FA9932}
+		{6ECE4292-FA41-4DDD-B0C2-CCFC45CD3C97} = {36C37EFB-B518-4AF3-BD9E-99EEC3FA9932}
 	EndGlobalSection
 EndGlobal

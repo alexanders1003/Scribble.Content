@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Scribble.Content.Infrastructure.Contexts;
 using Scribble.Content.Models;
 
-namespace Scribble.Content.UnitTests.Fixtures;
+namespace Scribble.Content.Tests.Unit.Fixtures;
 
 public class ApplicationDbContextCustomization : ICustomization
 {
@@ -19,7 +19,7 @@ public class ApplicationDbContextCustomization : ICustomization
     private static ApplicationDbContext CreateDbContext()
     {
         var dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase("Scribble.Content.UnitTests")
+            .UseInMemoryDatabase("Scribble.Content.Tests.Unit")
             .Options;
         var dbContext = new ApplicationDbContext(dbContextOptions);
         return dbContext;

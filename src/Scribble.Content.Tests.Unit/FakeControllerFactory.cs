@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Scribble.Content.UnitTests;
+namespace Scribble.Content.Tests.Unit;
 
 public static class FakeControllerFactory
 {

@@ -8,7 +8,7 @@ using Scribble.Content.Web.Definitions.Documentation;
 using Scribble.Content.Web.Definitions.Documentation.Conventions;
 using Scribble.Content.Web.Features.Commands;
 using Scribble.Content.Web.Features.Queries;
-using Scribble.Content.Web.Models.Base;
+using Scribble.Content.Web.Models;
 using Scribble.Responses;
 using Scribble.Shared.Models;
 

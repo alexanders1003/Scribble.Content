@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
-namespace Scribble.Content.IntegrationTests.Infrastructure;
+namespace Scribble.Content.Tests.Integration.Infrastructure;
 
 public class TestAuthenticationService : IAuthenticationService
 {

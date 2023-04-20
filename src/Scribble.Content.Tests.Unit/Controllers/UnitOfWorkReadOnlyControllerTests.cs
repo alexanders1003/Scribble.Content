@@ -11,7 +11,7 @@ using Scribble.Responses;
 using Scribble.Shared.Models;
 using Xunit;
 
-namespace Scribble.Content.UnitTests.Controllers;
+namespace Scribble.Content.Tests.Unit.Controllers;
 
 public abstract class UnitOfWorkReadOnlyControllerTests<TEntity, TKey> 
     where TEntity : Entity<TKey> where TKey : IEquatable<TKey>
@@ -21,7 +21,8 @@ public abstract class UnitOfWorkReadOnlyControllerTests<TEntity, TKey>
     [Fact]
     public virtual async Task GetAllEntities_ReturnsStatusCode200()
     {
-        var entities = Fixture.CreateMany<TEntity>(10); 
+        var entities = Fixture.CreateMany<TEntity>(10)
+            .ToList(); 
         
         var mediatorMock = new Mock<IMediator>();
         mediatorMock.Setup(x => 

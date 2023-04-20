@@ -6,15 +6,14 @@ using Scribble.Shared.Models;
 
 namespace Scribble.Content.Web.Features.Queries;
 
-// ReSharper disable once ClassNeverInstantiated.Global
-public class GetAllEntitiesQuery<TEntity, TKey> : IRequest<IEnumerable<TEntity>>
+public class GetAllEntitiesQuery<TEntity, TKey> : IRequest<ICollection<TEntity>>
     where TEntity : Entity<TKey> where TKey : IEquatable<TKey>
 {
     public GetAllEntitiesQuery(Expression<Func<TEntity, bool>>? predicate = default) => Predicate = predicate;
     public Expression<Func<TEntity, bool>>? Predicate { get; }
 }
 
-public class GetAllEntitiesQueryHandler<TEntity, TKey> : IRequestHandler<GetAllEntitiesQuery<TEntity, TKey>, IEnumerable<TEntity>>
+public class GetAllEntitiesQueryHandler<TEntity, TKey> : IRequestHandler<GetAllEntitiesQuery<TEntity, TKey>, ICollection<TEntity>>
     where TEntity : Entity<TKey> where TKey : IEquatable<TKey>
 {
     private readonly ILogger<GetAllEntitiesQueryHandler<TEntity, TKey>> _logger;
@@ -27,7 +26,7 @@ public class GetAllEntitiesQueryHandler<TEntity, TKey> : IRequestHandler<GetAllE
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<TEntity>> Handle(GetAllEntitiesQuery<TEntity, TKey> request, CancellationToken token)
+    public async Task<ICollection<TEntity>> Handle(GetAllEntitiesQuery<TEntity, TKey> request, CancellationToken token)
     {
         var repository = _unitOfWork.GetRepository<TEntity, Guid>();
 

@@ -13,7 +13,7 @@ using Scribble.Content.Web.Models.Entities;
 using Scribble.Responses;
 using Xunit;
 
-namespace Scribble.Content.UnitTests.Controllers;
+namespace Scribble.Content.Tests.Unit.Controllers;
 
 public class PostsWritableControllerTests : UnitOfWorkWritableControllerTests<PostEntity, Guid, PostViewModel>
 {
@@ -85,7 +85,7 @@ public class PostsWritableControllerTests : UnitOfWorkWritableControllerTests<Po
         var mediatorMock = new Mock<IMediator>();
         mediatorMock.Setup(
                 x => x.Send(It.IsAny<PublishPostCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Unit.Value);
+            .ReturnsAsync(MediatR.Unit.Value);
 
         var controller = FakeControllerFactory.Create<PostsWritableController>(mediatorMock.Object);
 
@@ -119,7 +119,7 @@ public class PostsWritableControllerTests : UnitOfWorkWritableControllerTests<Po
         var mediatorMock = new Mock<IMediator>();
         mediatorMock.Setup(
                 x => x.Send(It.IsAny<SetViewsCountCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Unit.Value);
+            .ReturnsAsync(MediatR.Unit.Value);
 
         var controller = FakeControllerFactory.Create<PostsWritableController>(mediatorMock.Object);
 

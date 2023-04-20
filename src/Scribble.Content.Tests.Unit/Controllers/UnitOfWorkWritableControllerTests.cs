@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Scribble.Content.Web.Controllers.Base;
 using Scribble.Content.Web.Features.Commands;
-using Scribble.Content.Web.Models.Base;
+using Scribble.Content.Web.Models;
 using Scribble.Responses;
 using Scribble.Shared.Models;
 using Xunit;
 
-namespace Scribble.Content.UnitTests.Controllers;
+namespace Scribble.Content.Tests.Unit.Controllers;
 
 public abstract class UnitOfWorkWritableControllerTests<TEntity, TKey, TViewModel> : UnitOfWorkReadOnlyControllerTests<TEntity, TKey> 
     where TEntity : Entity<TKey> where TKey : IEquatable<TKey> where TViewModel : ViewModel
@@ -62,7 +62,7 @@ public abstract class UnitOfWorkWritableControllerTests<TEntity, TKey, TViewMode
         var mediatorMock = new Mock<IMediator>();
         mediatorMock.Setup(x => 
                 x.Send(It.IsAny<UpdateEntityCommand<TEntity, TKey, TViewModel>>(), It.IsAny<CancellationToken>()))!
-            .ReturnsAsync(It.IsAny<Unit>());
+            .ReturnsAsync(It.IsAny<MediatR.Unit>());
 
         var controller = FakeControllerFactory
             .Create<UnitOfWorkWritableController<TEntity, TKey, TViewModel>>(mediatorMock.Object);
@@ -80,7 +80,7 @@ public abstract class UnitOfWorkWritableControllerTests<TEntity, TKey, TViewMode
         var mediatorMock = new Mock<IMediator>();
         mediatorMock.Setup(x => 
                 x.Send(It.IsAny<UpdateEntityCommand<TEntity, TKey, TViewModel>>(), It.IsAny<CancellationToken>()))!
-            .ReturnsAsync(It.IsAny<Unit>());
+            .ReturnsAsync(It.IsAny<MediatR.Unit>());
 
         var controller = FakeControllerFactory
             .Create<UnitOfWorkWritableController<TEntity, TKey, TViewModel>>(mediatorMock.Object);
@@ -98,7 +98,7 @@ public abstract class UnitOfWorkWritableControllerTests<TEntity, TKey, TViewMode
         var mediatorMock = new Mock<IMediator>();
         mediatorMock.Setup(x => 
                 x.Send(It.IsAny<RemoveEntityCommand<TEntity, TKey>>(), It.IsAny<CancellationToken>()))!
-            .ReturnsAsync(It.IsAny<Unit>());
+            .ReturnsAsync(It.IsAny<MediatR.Unit>());
 
         var controller = FakeControllerFactory
             .Create<UnitOfWorkWritableController<TEntity, TKey, TViewModel>>(mediatorMock.Object);

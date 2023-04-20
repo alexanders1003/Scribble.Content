@@ -4,11 +4,11 @@ using System.Text.Json.Serialization;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Scribble.Content.IntegrationTests.Infrastructure;
 using Scribble.Content.Models;
+using Scribble.Content.Tests.Integration.Infrastructure;
 using Scribble.Responses;
 
-namespace Scribble.Content.IntegrationTests.Controllers;
+namespace Scribble.Content.Tests.Integration.Controllers;
 
 public class BlogsControllerIntegrationTests : IClassFixture<TestWebApplicationFactory<Program>>
 {

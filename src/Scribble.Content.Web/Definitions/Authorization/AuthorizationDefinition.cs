@@ -1,4 +1,5 @@
-﻿using Calabonga.AspNetCore.AppDefinitions;
+﻿using System.Text;
+using Calabonga.AspNetCore.AppDefinitions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -23,21 +24,17 @@ public class AuthorizationDefinition : AppDefinition
             })
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
-                options.SaveToken = true;
-
                 options.Authority = config.Authority;
-                options.Audience = config.Audience;
-                options.RequireHttpsMetadata = false;
-
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = config.Issuer,
                     ValidateIssuer = true,
-
-                    ValidAudience = config.Audience,
                     ValidateAudience = true,
-
                     ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    
+                    ValidIssuer = config.Issuer,
+                    ValidAudience = config.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey("scrbl-content-secret-key"u8.ToArray())
                 };
             });
     }

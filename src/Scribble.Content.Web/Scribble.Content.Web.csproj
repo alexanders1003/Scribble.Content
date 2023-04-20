@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+    <AssemblyName>Scribble.Content.Web</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,8 +25,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Scribble.Identity.Authorization" Version="1.0.1" />
     <PackageReference Include="Scribble.Responses" Version="1.0.0" />
-    <PackageReference Include="Scribble.Shared.Web" Version="1.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.1.1-dev-00295" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.12" />
@@ -48,6 +49,12 @@
       <Generator>MSBuild:Compile</Generator>
       <Link>Proto\content.proto</Link>
     </Protobuf>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
   </ItemGroup>
 
 </Project>

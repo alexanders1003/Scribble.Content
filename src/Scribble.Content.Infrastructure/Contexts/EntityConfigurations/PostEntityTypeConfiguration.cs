@@ -16,7 +16,7 @@ public class PostEntityTypeConfiguration : IEntityTypeConfiguration<PostEntity>
             .HasDefaultValueSql("uuid_generate_v4()")
             .HasColumnName("post_id");
         builder.Property(e => e.BlogId).HasColumnName("blog_id");
-        builder.Property(e => e.Content).HasColumnName("content");
+        builder.Property(e => e.HtmlContent).HasColumnName("html_content");
         builder.Property(e => e.CreatedAt)
             .HasDefaultValueSql("now()")
             .HasColumnType("timestamp without time zone")
